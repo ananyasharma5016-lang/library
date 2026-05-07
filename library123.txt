@@ -1,0 +1,613 @@
+<!DOCTYPE html> 
+
+<html lang="en"> 
+
+<head> 
+
+  <meta charset="UTF-8" /> 
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+
+  <title>Smart Library System</title> 
+
+  <style> 
+
+    :root{--bg:#f5f7fb;--card:#ffffff;--primary:#2563eb;--primary2:#1d4ed8;--text:#162033;--muted:#64748b;--line:#dbe3f0;--green:#16a34a;--red:#dc2626;--yellow:#f59e0b;--shadow:0 12px 30px rgba(37,99,235,.12);--radius:18px} 
+
+    *{box-sizing:border-box;margin:0;padding:0} 
+
+    body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#eef4ff,#f8fbff 45%,#fff7e8);color:var(--text);line-height:1.5} 
+
+    .wrap{width:min(1180px,calc(100% - 24px));margin:auto} 
+
+    .topbar{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;padding:14px 0;box-shadow:0 8px 24px rgba(15,23,42,.18)} 
+
+    .topbar .row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap} 
+
+    .brand{display:flex;align-items:center;gap:12px} 
+
+    .logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);font-size:1.2rem} 
+
+    .brand h1{font-size:1.1rem;line-height:1.1} 
+
+    .brand p{font-size:.86rem;opacity:.86} 
+
+    .hero{padding:22px 0 14px} 
+
+    .hero .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px} 
+
+    .card{background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)} 
+
+    .hero-left{padding:28px;background:linear-gradient(135deg,#2f6bf0,#5b8cff);color:#fff;position:relative;overflow:hidden} 
+
+    .hero-left:after{content:'';position:absolute;right:-30px;top:-30px;width:170px;height:170px;border-radius:50%;background:rgba(255,255,255,.12)} 
+
+    .hero-left h2{font-size:clamp(1.9rem,4vw,3rem);line-height:1.05;margin-bottom:12px;max-width:12ch} 
+
+    .hero-left p{max-width:60ch;font-size:1rem;color:rgba(255,255,255,.94);margin-bottom:18px} 
+
+    .tags{display:flex;flex-wrap:wrap;gap:10px} 
+
+    .tag{padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);font-size:.92rem} 
+
+    .hero-right{padding:22px} 
+
+    .hero-right h3{font-size:1.15rem;color:var(--primary);margin-bottom:14px} 
+
+    .feature-list{display:grid;gap:12px} 
+
+    .feature{padding:14px;border-radius:14px;background:#eff5ff;border:1px solid var(--line)} 
+
+    .stats{padding:8px 0 4px} 
+
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px} 
+
+    .stat{padding:18px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)} 
+
+    .stat h4{font-size:.92rem;color:var(--muted);margin-bottom:10px} 
+
+    .stat .num{font-size:1.9rem;font-weight:700;color:var(--primary)} 
+
+    .main{padding:14px 0 30px;display:grid;grid-template-columns:360px 1fr;gap:18px} 
+
+    .panel{padding:20px;background:var(--card);border-radius:var(--radius);border:1px solid var(--line);box-shadow:var(--shadow)} 
+
+    .panel h3{font-size:1.15rem;color:var(--primary);margin-bottom:14px} 
+
+    label{display:block;font-weight:700;font-size:.92rem;margin:10px 0 6px} 
+
+    input,select{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:12px;font-size:.98rem;outline:none;background:#fff} 
+
+    input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,.12)} 
+
+    .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px} 
+
+    button{border:none;border-radius:12px;padding:12px 16px;font-weight:700;font-size:.95rem;cursor:pointer;transition:.18s transform,.18s opacity,.18s background} 
+
+    button:hover{transform:translateY(-1px)} 
+
+    .btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary2)} 
+
+    .btn-soft{background:#e8eefc;color:var(--primary)} 
+
+    .btn-danger{background:#fee2e2;color:var(--red)} 
+
+    .toolbar{display:grid;grid-template-columns:1.15fr .85fr .85fr .9fr;gap:10px;margin-bottom:14px} 
+
+    .book-list{display:grid;gap:12px} 
+
+    .book{padding:16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,#fff,#f8fbff);display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start} 
+
+    .book h4{font-size:1.05rem;margin-bottom:6px} 
+
+    .meta{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0} 
+
+    .pill{padding:6px 11px;border-radius:999px;font-size:.82rem;font-weight:700;background:#eef2ff;color:#3730a3;border:1px solid #dbe3ff} 
+
+    .pill.ok{background:#dcfce7;color:#166534;border-color:#bbf7d0}.pill.bad{background:#fee2e2;color:#991b1b;border-color:#fecaca}.pill.warn{background:#fef3c7;color:#92400e;border-color:#fde68a} 
+
+    .actions{display:grid;gap:8px;min-width:150px} 
+
+    .empty{padding:34px 14px;text-align:center;border:2px dashed var(--line);border-radius:16px;color:var(--muted);background:#fbfdff} 
+
+    .footer{padding:16px 0 30px;text-align:center;color:var(--muted);font-size:.94rem} 
+
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center} 
+
+    .small{font-size:.86rem;color:var(--muted)} 
+
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:10px} 
+
+    @media (max-width:980px){.hero .grid,.main,.stats-grid,.toolbar{grid-template-columns:1fr}} 
+
+    @media (max-width:640px){.book{grid-template-columns:1fr}.actions{grid-template-columns:1fr 1fr 1fr}.hero-left,.hero-right,.panel,.stat{padding:18px}.topbar .row{justify-content:center}.brand{justify-content:center;width:100%}} 
+
+    @media print{.topbar,.hero,.stats,.panel form,.toolbar,.actions,.footer button{display:none !important}.panel{box-shadow:none}.book{break-inside:avoid}} 
+
+  </style> 
+
+</head> 
+
+<body> 
+
+  <header class="topbar"> 
+
+    <div class="wrap row"> 
+
+      <div class="brand"> 
+
+        <div class="logo">📚</div> 
+
+        <div> 
+
+          <h1>Smart Library System</h1> 
+
+          <p>Dynamic English website</p> 
+
+        </div> 
+
+      </div> 
+
+      <div class="top-actions"> 
+
+        <div class="small" id="clockText">Ready</div> 
+
+        <button class="btn-soft" id="printBtn" type="button">Print Report</button> 
+
+        <button class="btn-soft" id="clearAllBtn" type="button">Clear All</button> 
+
+      </div> 
+
+    </div> 
+
+  </header> 
+
+ 
+
+  <section class="hero"> 
+
+    <div class="wrap grid"> 
+
+      <div class="card hero-left"> 
+
+        <h2>Library Management System</h2> 
+
+        <p>Manage books dynamically with add, search, filter, issue, return, due date, and delete features. Data is saved in the browser using local storage, so it stays after refresh.</p> 
+
+        <div class="tags"> 
+
+          <span class="tag">Add Books</span> 
+
+          <span class="tag">Search & Filter</span> 
+
+          <span class="tag">Issue / Return</span> 
+
+          <span class="tag">Due Date</span> 
+
+          <span class="tag">Local Storage</span> 
+
+        </div> 
+
+      </div> 
+
+      <div class="card hero-right"> 
+
+        <h3>Project Features</h3> 
+
+        <div class="feature-list"> 
+
+          <div class="feature"><strong>Book details:</strong> title, author, category, member name, issue date, return date.</div> 
+
+          <div class="feature"><strong>Smart filters:</strong> search by title/author/member, filter by category, status, and date.</div> 
+
+          <div class="feature"><strong>Quick actions:</strong> issue/return toggle, edit date, delete record.</div> 
+
+          <div class="feature"><strong>Extra support:</strong> printable report, counter cards, and persistent storage.</div> 
+
+        </div> 
+
+      </div> 
+
+    </div> 
+
+  </section> 
+
+ 
+
+  <section class="stats"> 
+
+    <div class="wrap stats-grid"> 
+
+      <div class="stat"><h4>Total Records</h4><div class="num" id="totalBooks">0</div></div> 
+
+      <div class="stat"><h4>Available</h4><div class="num" id="availableBooks">0</div></div> 
+
+      <div class="stat"><h4>Issued</h4><div class="num" id="issuedBooks">0</div></div> 
+
+      <div class="stat"><h4>Overdue</h4><div class="num" id="overdueBooks">0</div></div> 
+
+    </div> 
+
+  </section> 
+
+ 
+
+  <main class="wrap main"> 
+
+    <section class="panel"> 
+
+      <h3>Add / Edit Book</h3> 
+
+      <form id="bookForm"> 
+
+        <input type="hidden" id="editId" value="" /> 
+
+        <label for="title">Book Title</label> 
+
+        <input id="title" type="text" placeholder="Enter book title" required /> 
+
+        <label for="author">Author</label> 
+
+        <input id="author" type="text" placeholder="Enter author name" required /> 
+
+        <label for="category">Category</label> 
+
+        <select id="category" required> 
+
+          <option value="">Select category</option> 
+
+          <option>Science</option><option>Mathematics</option><option>Computer</option><option>History</option><option>Story</option><option>General Knowledge</option><option>Novel</option><option>Reference</option> 
+
+        </select> 
+
+        <label for="member">Member / Student Name</label> 
+
+        <input id="member" type="text" placeholder="Enter member name" /> 
+
+        <div class="split"> 
+
+          <div> 
+
+            <label for="issueDate">Issue Date</label> 
+
+            <input id="issueDate" type="date" /> 
+
+          </div> 
+
+          <div> 
+
+            <label for="returnDate">Return Date</label> 
+
+            <input id="returnDate" type="date" /> 
+
+          </div> 
+
+        </div> 
+
+        <label for="status">Status</label> 
+
+        <select id="status" required> 
+
+          <option value="Available">Available</option> 
+
+          <option value="Issued">Issued</option> 
+
+        </select> 
+
+        <div class="btn-row"> 
+
+          <button class="btn-primary" type="submit" id="saveBtn">Add Book</button> 
+
+          <button class="btn-soft" type="button" id="resetBtn">Reset</button> 
+
+        </div> 
+
+      </form> 
+
+      <p class="small" style="margin-top:12px;">Tip: If status is Issued, fill issue and return dates for a better report.</p> 
+
+    </section> 
+
+ 
+
+    <section class="panel"> 
+
+      <h3>Manage Books</h3> 
+
+      <div class="toolbar"> 
+
+        <input type="text" id="searchInput" placeholder="Search by title, author, or member" /> 
+
+        <select id="filterCategory"><option value="All">All Categories</option></select> 
+
+        <select id="filterStatus"><option value="All">All Status</option><option value="Available">Available</option><option value="Issued">Issued</option></select> 
+
+        <input type="date" id="filterDate" /> 
+
+      </div> 
+
+      <div id="bookList" class="book-list"></div> 
+
+    </section> 
+
+  </main> 
+
+ 
+
+  <div class="footer wrap"> 
+
+    Dynamic English version of the Library Management System. 
+
+  </div> 
+
+ 
+
+  <script> 
+
+    const STORAGE_KEY = 'smartLibraryBooks_v2'; 
+
+    const bookForm = document.getElementById('bookForm'); 
+
+    const editId = document.getElementById('editId'); 
+
+    const title = document.getElementById('title'); 
+
+    const author = document.getElementById('author'); 
+
+    const category = document.getElementById('category'); 
+
+    const member = document.getElementById('member'); 
+
+    const issueDate = document.getElementById('issueDate'); 
+
+    const returnDate = document.getElementById('returnDate'); 
+
+    const status = document.getElementById('status'); 
+
+    const saveBtn = document.getElementById('saveBtn'); 
+
+    const resetBtn = document.getElementById('resetBtn'); 
+
+    const searchInput = document.getElementById('searchInput'); 
+
+    const filterCategory = document.getElementById('filterCategory'); 
+
+    const filterStatus = document.getElementById('filterStatus'); 
+
+    const filterDate = document.getElementById('filterDate'); 
+
+    const bookList = document.getElementById('bookList'); 
+
+    const totalBooks = document.getElementById('totalBooks'); 
+
+    const availableBooks = document.getElementById('availableBooks'); 
+
+    const issuedBooks = document.getElementById('issuedBooks'); 
+
+    const overdueBooks = document.getElementById('overdueBooks'); 
+
+    const clearAllBtn = document.getElementById('clearAllBtn'); 
+
+    const printBtn = document.getElementById('printBtn'); 
+
+    const clockText = document.getElementById('clockText'); 
+
+ 
+
+    let books = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || [ 
+
+      { id: 1, title: 'Physics Fundamentals', author: 'R. Sharma', category: 'Science', member: '', issueDate: '', returnDate: '', status: 'Available' }, 
+
+      { id: 2, title: 'Modern Mathematics', author: 'S. Verma', category: 'Mathematics', member: 'Aman', issueDate: '2026-04-28', returnDate: '2026-05-05', status: 'Issued' }, 
+
+      { id: 3, title: 'JavaScript Basics', author: 'A. Mehta', category: 'Computer', member: '', issueDate: '', returnDate: '', status: 'Available' }, 
+
+      { id: 4, title: 'India Through Ages', author: 'P. Joshi', category: 'History', member: 'Riya', issueDate: '2026-04-20', returnDate: '2026-04-26', status: 'Issued' }, 
+
+      { id: 5, title: 'Moral Stories', author: 'K. Gupta', category: 'Story', member: '', issueDate: '', returnDate: '', status: 'Available' } 
+
+    ]; 
+
+ 
+
+    function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(books)); } 
+
+    function todayISO() { return new Date().toISOString().split('T')[0]; } 
+
+    function isOverdue(book) { return book.status === 'Issued' && book.returnDate && book.returnDate < todayISO(); } 
+
+    function updateClock() { const d = new Date(); clockText.textContent = d.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'medium' }); } 
+
+    updateClock(); setInterval(updateClock, 1000); 
+
+ 
+
+    function fillCategoryFilter() { 
+
+      const prev = filterCategory.value; 
+
+      const cats = [...new Set(books.map(b => b.category))].sort(); 
+
+      filterCategory.innerHTML = '<option value="All">All Categories</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join(''); 
+
+      filterCategory.value = cats.includes(prev) ? prev : 'All'; 
+
+    } 
+
+ 
+
+    function render() { 
+
+      save(); 
+
+      fillCategoryFilter(); 
+
+      const q = searchInput.value.trim().toLowerCase(); 
+
+      const c = filterCategory.value; 
+
+      const s = filterStatus.value; 
+
+      const d = filterDate.value; 
+
+      const filtered = books.filter(b => { 
+
+        const okSearch = !q || [b.title, b.author, b.member].join(' ').toLowerCase().includes(q); 
+
+        const okCategory = c === 'All' || b.category === c; 
+
+        const okStatus = s === 'All' || b.status === s; 
+
+        const okDate = !d || b.issueDate === d || b.returnDate === d; 
+
+        return okSearch && okCategory && okStatus && okDate; 
+
+      }); 
+
+      totalBooks.textContent = books.length; 
+
+      availableBooks.textContent = books.filter(b => b.status === 'Available').length; 
+
+      issuedBooks.textContent = books.filter(b => b.status === 'Issued').length; 
+
+      overdueBooks.textContent = books.filter(isOverdue).length; 
+
+      if (!filtered.length) { 
+
+        bookList.innerHTML = `<div class="empty"><h4>No records found</h4><p>Try changing the search or filter values.</p></div>`; 
+
+        return; 
+
+      } 
+
+      bookList.innerHTML = filtered.map(book => { 
+
+        const overdue = isOverdue(book); 
+
+        return ` 
+
+          <article class="book"> 
+
+            <div> 
+
+              <h4>${book.title}</h4> 
+
+              <div>Author: ${book.author}</div> 
+
+              <div class="meta"> 
+
+                <span class="pill">${book.category}</span> 
+
+                <span class="pill ${book.status === 'Available' ? 'ok' : 'bad'}">${book.status}</span> 
+
+                ${overdue ? '<span class="pill warn">Overdue</span>' : ''} 
+
+              </div> 
+
+              <div class="small">Member: ${book.member || '-'}</div> 
+
+              <div class="small">Issue Date: ${book.issueDate || '-'}</div> 
+
+              <div class="small">Return Date: ${book.returnDate || '-'}</div> 
+
+              <div class="small">Book ID: LIB-${String(book.id).padStart(3, '0')}</div> 
+
+            </div> 
+
+            <div class="actions"> 
+
+              <button class="btn-primary" onclick="toggleStatus(${book.id})">${book.status === 'Available' ? 'Issue' : 'Return'}</button> 
+
+              <button class="btn-soft" onclick="editBook(${book.id})">Edit</button> 
+
+              <button class="btn-danger" onclick="removeBook(${book.id})">Delete</button> 
+
+            </div> 
+
+          </article> 
+
+        `; 
+
+      }).join(''); 
+
+    } 
+
+ 
+
+    bookForm.addEventListener('submit', e => { 
+
+      e.preventDefault(); 
+
+      const data = { title: title.value.trim(), author: author.value.trim(), category: category.value, member: member.value.trim(), issueDate: issueDate.value, returnDate: returnDate.value, status: status.value }; 
+
+      if (!data.title || !data.author || !data.category) return; 
+
+      if (editId.value) { 
+
+        const idx = books.findIndex(b => String(b.id) === editId.value); 
+
+        if (idx !== -1) books[idx] = { ...books[idx], ...data }; 
+
+        editId.value = ''; 
+
+        saveBtn.textContent = 'Add Book'; 
+
+      } else { 
+
+        books.unshift({ id: Date.now(), ...data }); 
+
+      } 
+
+      bookForm.reset(); 
+
+      status.value = 'Available'; 
+
+      render(); 
+
+    }); 
+
+ 
+
+    function toggleStatus(id) { books = books.map(b => b.id === id ? { ...b, status: b.status === 'Available' ? 'Issued' : 'Available' } : b); render(); } 
+
+    function editBook(id) { 
+
+      const b = books.find(x => x.id === id); 
+
+      if (!b) return; 
+
+      editId.value = String(b.id); 
+
+      title.value = b.title; author.value = b.author; category.value = b.category; member.value = b.member || ''; issueDate.value = b.issueDate || ''; returnDate.value = b.returnDate || ''; status.value = b.status; saveBtn.textContent = 'Update Book'; window.scrollTo({ top: 0, behavior: 'smooth' }); 
+
+    } 
+
+    function removeBook(id) { if (!confirm('Delete this record?')) return; books = books.filter(b => b.id !== id); if (String(editId.value) === String(id)) resetForm(); render(); } 
+
+    function resetForm() { bookForm.reset(); editId.value = ''; status.value = 'Available'; saveBtn.textContent = 'Add Book'; } 
+
+ 
+
+    resetBtn.addEventListener('click', resetForm); 
+
+    searchInput.addEventListener('input', render); 
+
+    filterCategory.addEventListener('change', render); 
+
+    filterStatus.addEventListener('change', render); 
+
+    filterDate.addEventListener('change', render); 
+
+    clearAllBtn.addEventListener('click', () => { if (!confirm('Clear all library records?')) return; books = []; localStorage.removeItem(STORAGE_KEY); resetForm(); render(); }); 
+
+    printBtn.addEventListener('click', () => window.print()); 
+
+ 
+
+    render(); 
+
+  </script> 
+
+</body> 
+
+</html> 
